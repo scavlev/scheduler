@@ -1,0 +1,59 @@
+plugins {
+  id 'java'
+  id 'groovy'
+  id 'org.springframework.boot' version '3.1.0'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'watu'
+
+repositories {
+  mavenCentral()
+}
+
+sourceSets {
+  testIntegration {
+    java {
+      compileClasspath += main.output + test.output
+      runtimeClasspath += main.output + test.output
+    }
+  }
+}
+
+configurations {
+  testIntegrationImplementation.extendsFrom testImplementation
+  testIntegrationRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+dependencies {
+  compileOnly 'org.projectlombok:lombok:1.18.28'
+  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+  implementation 'org.springframework.boot:spring-boot-starter'
+
+  testImplementation platform('org.spockframework:spock-bom:2.4-M1-groovy-4.0')
+  testImplementation 'org.spockframework:spock-core'
+  testRuntimeOnly 'net.bytebuddy:byte-buddy'
+  testRuntimeOnly 'org.objenesis:objenesis:3.3'
+
+  testIntegrationImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testIntegrationImplementation 'org.spockframework:spock-spring'
+}
+
+tasks.register('testIntegration', Test) {
+  description = "Run integration tests"
+  group = "verification"
+  testClassesDirs = sourceSets.testIntegration.output.classesDirs
+  classpath = sourceSets.testIntegration.runtimeClasspath
+}
+
+tasks.withType(Test).configureEach {
+  useJUnitPlatform()
+}
+
+check.dependsOn 'testIntegration'
+
+wrapper {
+  gradleVersion '8.1.1'
+}

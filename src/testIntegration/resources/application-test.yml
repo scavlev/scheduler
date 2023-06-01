@@ -1,0 +1,4 @@
+watu:
+  scheduler:
+    cron: "*/1 * * * * *"
+    target-timezone: Europe/Riga

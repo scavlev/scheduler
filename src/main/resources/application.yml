@@ -1,0 +1,6 @@
+watu:
+  scheduler:
+    # because of aggressive time rounding to minutes - specifying seconds different to 0 is discouraged and might lead to issues
+    cron: "0 * * * * *"
+    data-file-path: classpath:data.csv
+    target-timezone: Africa/Lagos
